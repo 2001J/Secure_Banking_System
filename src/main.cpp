@@ -5,6 +5,7 @@ void displayMenu() {
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "  Welcome to the Secure Banking System  " << std::endl;
     std::cout << "----------------------------------------" << std::endl;
+    std::cout << "Please select an option from the menu below:" << std::endl;
     std::cout << "1. Create Customer" << std::endl;
     std::cout << "2. Create Account" << std::endl;
     std::cout << "3. Perform Transaction" << std::endl;
@@ -22,16 +23,17 @@ void createCustomer(BankingService &bankingService) {
     std::string fName, lName, email, address, phone;
     std::cout << "Enter Customer ID: ";
     std::cin >> id;
+    std::cin.ignore(); // Ignore the newline character left in the buffer
     std::cout << "Enter First Name: ";
-    std::cin >> fName;
+    std::getline(std::cin, fName);
     std::cout << "Enter Last Name: ";
-    std::cin >> lName;
+    std::getline(std::cin, lName);
     std::cout << "Enter Email: ";
-    std::cin >> email;
+    std::getline(std::cin, email);
     std::cout << "Enter Address: ";
-    std::cin >> address;
+    std::getline(std::cin, address);
     std::cout << "Enter Phone: ";
-    std::cin >> phone;
+    std::getline(std::cin, phone);
     bankingService.createCustomer(id, fName, lName, email, address, phone);
     std::cout << "Customer created successfully!" << std::endl;
 }
@@ -46,8 +48,9 @@ void createAccount(BankingService &bankingService) {
     std::cin >> custID;
     std::cout << "Enter Initial Balance: ";
     std::cin >> balance;
+    std::cin.ignore(); // Ignore the newline character left in the buffer
     std::cout << "Enter Account Type: ";
-    std::cin >> accType;
+    std::getline(std::cin, accType);
     bankingService.createAccount(accNum, custID, balance, accType);
     std::cout << "Account created successfully!" << std::endl;
 }
@@ -58,8 +61,9 @@ void performTransaction(BankingService &bankingService) {
     std::string type;
     std::cout << "Enter Account Number: ";
     std::cin >> accNum;
+    std::cin.ignore(); // Ignore the newline character left in the buffer
     std::cout << "Enter Transaction Type (Deposit/Withdrawal/Transfer): ";
-    std::cin >> type;
+    std::getline(std::cin, type);
     std::cout << "Enter Amount: ";
     std::cin >> amount;
     if (type == "Transfer") {
@@ -91,16 +95,17 @@ void updateCustomerDetails(BankingService &bankingService) {
     std::string fName, lName, email, address, phone;
     std::cout << "Enter Customer ID: ";
     std::cin >> id;
+    std::cin.ignore(); // Ignore the newline character left in the buffer
     std::cout << "Enter New First Name: ";
-    std::cin >> fName;
+    std::getline(std::cin, fName);
     std::cout << "Enter New Last Name: ";
-    std::cin >> lName;
+    std::getline(std::cin, lName);
     std::cout << "Enter New Email: ";
-    std::cin >> email;
+    std::getline(std::cin, email);
     std::cout << "Enter New Address: ";
-    std::cin >> address;
+    std::getline(std::cin, address);
     std::cout << "Enter New Phone: ";
-    std::cin >> phone;
+    std::getline(std::cin, phone);
 
     auto it = bankingService.customers.find(id);
     if (it != bankingService.customers.end()) {
