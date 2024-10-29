@@ -1,3 +1,4 @@
+// Transaction.h
 #ifndef SECURE_BANKING_SYSTEM_TRANSACTION_H
 #define SECURE_BANKING_SYSTEM_TRANSACTION_H
 
@@ -23,7 +24,7 @@ public:
     std::string getDate() const;
 
     std::string getTransactionDetails() const;
-    void executeTransaction(Account *fromAccount, Account *toAccount) const;
+    bool executeTransaction(Account *fromAccount, Account *toAccount = nullptr) const;
 };
 
 #endif // SECURE_BANKING_SYSTEM_TRANSACTION_H

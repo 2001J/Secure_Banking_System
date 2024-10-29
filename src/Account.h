@@ -1,3 +1,4 @@
+// Account.h
 #ifndef SECURE_BANKING_SYSTEM_ACCOUNT_H
 #define SECURE_BANKING_SYSTEM_ACCOUNT_H
 
@@ -25,9 +26,9 @@ public:
     std::string getAccountType() const;
 
     void setAccountType(const std::string &accType);
-    void deposit(double amount);
-    void withdraw(double amount);
-    void transfer(double amount, Account &toAccount);
+    bool deposit(double amount);
+    bool withdraw(double amount);
+    bool transfer(double amount, Account &toAccount);
     void viewTransactions() const;
     std::string getAccountDetails() const;
 };

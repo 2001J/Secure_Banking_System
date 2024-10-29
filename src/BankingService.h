@@ -1,4 +1,3 @@
-//BankingService.h
 #ifndef SECURE_BANKING_SYSTEM_BANKINGSERVICE_H
 #define SECURE_BANKING_SYSTEM_BANKINGSERVICE_H
 
@@ -18,8 +17,12 @@ public:
     void performTransaction(int accNum, const std::string &type, double amount, int toAccNum = -1);
     void viewAccountDetails(int accNum) const;
     void viewTransactions(int accNum) const;
+    void viewCustomerDetails(int custID) const;
+    void deleteCustomer(int custID);
+    void saveData() const;
+    void loadData();
+
+    friend void updateCustomerDetails(BankingService &bankingService);
 };
-
-
 
 #endif //SECURE_BANKING_SYSTEM_BANKINGSERVICE_H

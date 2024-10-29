@@ -17,7 +17,7 @@ public:
     Customer(int id, const std::string &fName, const std::string &lName, const std::string &mail,
              const std::string &addr, const std::string &ph);
 
-    int getCustomerID() const;
+    [[nodiscard]] int getCustomerID() const;
     [[nodiscard]] std::string getFirstName() const;
     [[nodiscard]] std::string getLastName() const;
     [[nodiscard]] std::string getEmail() const;

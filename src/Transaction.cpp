@@ -1,3 +1,4 @@
+// Transaction.cpp
 #include "Transaction.h"
 #include "Account.h"
 #include <iostream>
@@ -16,23 +17,39 @@ std::string Transaction::getTransactionDetails() const {
            ", Type: " + type + ", Amount: " + std::to_string(amount) + ", Date: " + date;
 }
 
-void Transaction::executeTransaction(Account *fromAccount, Account *toAccount) const {
-
-    //print transactions details
+bool Transaction::executeTransaction(Account *fromAccount, Account *toAccount) const {
     std::cout << "Executing transaction: " << getTransactionDetails() << std::endl;
 
-    // Check if 'fromAccount' has sufficient balance
-    if (fromAccount->getBalance() < amount) {
-        std::cerr << "Transaction failed: Insufficient funds in source account." << std::endl;
-        return;
-    }
-
-    // Check if 'toAccount' is valid and perform transaction
-    if (toAccount != nullptr) {
-        fromAccount->withdraw(amount);
-        toAccount->deposit(amount);
-        std::cout << "Transaction completed successfully." << std::endl;
+    if (type == "Deposit") {
+        fromAccount->deposit(amount);
+        std::cout << "Deposit completed successfully." << std::endl;
+        return true;
+    } else if (type == "Withdrawal") {
+        if (fromAccount->getBalance() >= amount) {
+            fromAccount->withdraw(amount);
+            std::cout << "Withdrawal completed successfully." << std::endl;
+            return true;
+        } else {
+            std::cerr << "Transaction failed: Insufficient funds in source account." << std::endl;
+            return false;
+        }
+    } else if (type == "Transfer") {
+        if (fromAccount->getBalance() >= amount) {
+            if (toAccount != nullptr) {
+                fromAccount->withdraw(amount);
+                toAccount->deposit(amount);
+                std::cout << "Transfer completed successfully." << std::endl;
+                return true;
+            } else {
+                std::cerr << "Invalid destination account." << std::endl;
+                return false;
+            }
+        } else {
+            std::cerr << "Transaction failed: Insufficient funds in source account." << std::endl;
+            return false;
+        }
     } else {
-        std::cerr << "Invalid destination account." << std::endl;
+        std::cerr << "Invalid transaction type." << std::endl;
+        return false;
     }
 }

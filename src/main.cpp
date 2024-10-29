@@ -1,100 +1,177 @@
 #include <iostream>
-#include "Customer.h"
-#include "Transaction.h"
 #include "BankingService.h"
 
 void displayMenu() {
-    std::cout << "\nWelcome to the Banking System\n";
-    std::cout << "1. Create a Customer\n";
-    std::cout << "2. Create an Account for Customer\n";
-    std::cout << "3. Deposit Funds\n";
-    std::cout << "4. Withdraw Funds\n";
-    std::cout << "5. Transfer Funds\n";
-    std::cout << "6. Display Account Balance\n";
-    std::cout << "0. Exit\n";
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "  Welcome to the Secure Banking System  " << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "1. Create Customer" << std::endl;
+    std::cout << "2. Create Account" << std::endl;
+    std::cout << "3. Perform Transaction" << std::endl;
+    std::cout << "4. View Account Details" << std::endl;
+    std::cout << "5. View Transactions" << std::endl;
+    std::cout << "6. Update Customer Details" << std::endl;
+    std::cout << "7. View Customer Details" << std::endl;
+    std::cout << "8. Delete Customer" << std::endl;
+    std::cout << "9. Exit" << std::endl;
     std::cout << "Enter your choice: ";
+}
+
+void createCustomer(BankingService &bankingService) {
+    int id;
+    std::string fName, lName, email, address, phone;
+    std::cout << "Enter Customer ID: ";
+    std::cin >> id;
+    std::cout << "Enter First Name: ";
+    std::cin >> fName;
+    std::cout << "Enter Last Name: ";
+    std::cin >> lName;
+    std::cout << "Enter Email: ";
+    std::cin >> email;
+    std::cout << "Enter Address: ";
+    std::cin >> address;
+    std::cout << "Enter Phone: ";
+    std::cin >> phone;
+    bankingService.createCustomer(id, fName, lName, email, address, phone);
+    std::cout << "Customer created successfully!" << std::endl;
+}
+
+void createAccount(BankingService &bankingService) {
+    int accNum, custID;
+    double balance;
+    std::string accType;
+    std::cout << "Enter Account Number: ";
+    std::cin >> accNum;
+    std::cout << "Enter Customer ID: ";
+    std::cin >> custID;
+    std::cout << "Enter Initial Balance: ";
+    std::cin >> balance;
+    std::cout << "Enter Account Type: ";
+    std::cin >> accType;
+    bankingService.createAccount(accNum, custID, balance, accType);
+    std::cout << "Account created successfully!" << std::endl;
+}
+
+void performTransaction(BankingService &bankingService) {
+    int accNum, toAccNum;
+    double amount;
+    std::string type;
+    std::cout << "Enter Account Number: ";
+    std::cin >> accNum;
+    std::cout << "Enter Transaction Type (Deposit/Withdrawal/Transfer): ";
+    std::cin >> type;
+    std::cout << "Enter Amount: ";
+    std::cin >> amount;
+    if (type == "Transfer") {
+        std::cout << "Enter Destination Account Number: ";
+        std::cin >> toAccNum;
+        bankingService.performTransaction(accNum, type, amount, toAccNum);
+    } else {
+        bankingService.performTransaction(accNum, type, amount);
+    }
+    std::cout << "Transaction performed successfully!" << std::endl;
+}
+
+void viewAccountDetails(BankingService &bankingService) {
+    int accNum;
+    std::cout << "Enter Account Number: ";
+    std::cin >> accNum;
+    bankingService.viewAccountDetails(accNum);
+}
+
+void viewTransactions(BankingService &bankingService) {
+    int accNum;
+    std::cout << "Enter Account Number: ";
+    std::cin >> accNum;
+    bankingService.viewTransactions(accNum);
+}
+
+void updateCustomerDetails(BankingService &bankingService) {
+    int id;
+    std::string fName, lName, email, address, phone;
+    std::cout << "Enter Customer ID: ";
+    std::cin >> id;
+    std::cout << "Enter New First Name: ";
+    std::cin >> fName;
+    std::cout << "Enter New Last Name: ";
+    std::cin >> lName;
+    std::cout << "Enter New Email: ";
+    std::cin >> email;
+    std::cout << "Enter New Address: ";
+    std::cin >> address;
+    std::cout << "Enter New Phone: ";
+    std::cin >> phone;
+
+    auto it = bankingService.customers.find(id);
+    if (it != bankingService.customers.end()) {
+        it->second.setFirstName(fName);
+        it->second.setLastName(lName);
+        it->second.setEmail(email);
+        it->second.setAddress(address);
+        it->second.setPhone(phone);
+        std::cout << "Customer details updated successfully!" << std::endl;
+    } else {
+        std::cout << "Customer not found!" << std::endl;
+    }
+}
+
+void viewCustomerDetails(BankingService &bankingService) {
+    int custID;
+    std::cout << "Enter Customer ID: ";
+    std::cin >> custID;
+    bankingService.viewCustomerDetails(custID);
+}
+
+void deleteCustomer(BankingService &bankingService) {
+    int custID;
+    std::cout << "Enter Customer ID: ";
+    std::cin >> custID;
+    bankingService.deleteCustomer(custID);
 }
 
 int main() {
     BankingService bankingService;
-    int choice;
-    int customerId, accountId, fromAccountId, toAccountId;
-    std::string firstName, lastName, email, address, phone, accountType;
-    double amount;
+    bankingService.loadData(); // Load data at the start
 
-    while (true) {
+    int choice;
+
+    do {
         displayMenu();
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                std::cout << "Enter Customer ID: ";
-                std::cin >> customerId;
-                std::cout << "Enter First Name: ";
-                std::cin >> firstName;
-                std::cout << "Enter Last Name: ";
-                std::cin >> lastName;
-                std::cout << "Enter Email: ";
-                std::cin >> email;
-                std::cout << "Enter Address: ";
-                std::cin >> address;
-                std::cout << "Enter Phone: ";
-                std::cin >> phone;
-                bankingService.createCustomer(customerId, firstName, lastName, email, address, phone);
-                std::cout << "Customer created successfully!\n";
+                createCustomer(bankingService);
                 break;
-
             case 2:
-                std::cout << "Enter Account Number: ";
-                std::cin >> accountId;
-                std::cout << "Enter Customer ID: ";
-                std::cin >> customerId;
-                std::cout << "Enter Initial Balance: ";
-                std::cin >> amount;
-                std::cout << "Enter Account Type: ";
-                std::cin >> accountType;
-                bankingService.createAccount(accountId, customerId, amount, accountType);
-                std::cout << "Account created successfully!\n";
+                createAccount(bankingService);
                 break;
-
             case 3:
-                std::cout << "Enter Account Number to Deposit: ";
-                std::cin >> accountId;
-                std::cout << "Enter Amount to Deposit: ";
-                std::cin >> amount;
-                bankingService.performTransaction(accountId, "Deposit", amount);
+                performTransaction(bankingService);
                 break;
-
             case 4:
-                std::cout << "Enter Account Number to Withdraw From: ";
-                std::cin >> accountId;
-                std::cout << "Enter Amount to Withdraw: ";
-                std::cin >> amount;
-                bankingService.performTransaction(accountId, "Withdrawal", amount);
+                viewAccountDetails(bankingService);
                 break;
-
             case 5:
-                std::cout << "Enter Source Account Number: ";
-                std::cin >> fromAccountId;
-                std::cout << "Enter Destination Account Number: ";
-                std::cin >> toAccountId;
-                std::cout << "Enter Amount to Transfer: ";
-                std::cin >> amount;
-                bankingService.performTransaction(fromAccountId, "Transfer", amount, toAccountId);
+                viewTransactions(bankingService);
                 break;
-
             case 6:
-                std::cout << "Enter Account Number to Check Balance: ";
-                std::cin >> accountId;
-                bankingService.viewAccountDetails(accountId);
+                updateCustomerDetails(bankingService);
                 break;
-
-            case 0:
-                std::cout << "Exiting the Banking System. Goodbye!\n";
-                return 0;
-
+            case 7:
+                viewCustomerDetails(bankingService);
+                break;
+            case 8:
+                deleteCustomer(bankingService);
+                break;
+            case 9:
+                std::cout << "Exiting the application." << std::endl;
+                bankingService.saveData(); // Save data before exiting
+                break;
             default:
-                std::cout << "Invalid choice. Please try again.\n";
+                std::cout << "Invalid choice. Please try again." << std::endl;
         }
-    }
+    } while (choice != 9);
+
+    return 0;
 }

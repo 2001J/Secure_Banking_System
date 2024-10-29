@@ -1,5 +1,6 @@
+// Account.cpp
 #include "Account.h"
-#include "Transaction.h" // include Transaction here
+#include "Transaction.h"
 #include <iostream>
 #include <ctime>
 
@@ -22,28 +23,31 @@ std::string Account::getAccountType() const { return accountType; }
 
 void Account::setAccountType(const std::string &accType) { accountType = accType; }
 
-void Account::deposit(double amount) {
-    balance += amount;
-    transactions.emplace_back(transactions.size() + 1, accountNumber, "Deposit", amount, getCurrentDate());
+bool Account::deposit(double amount) {
+    Transaction transaction(transactions.size() + 1, accountNumber, "Deposit", amount, getCurrentDate());
+    if (transaction.executeTransaction(this)) {
+        transactions.push_back(transaction);
+        return true;
+    }
+    return false;
 }
 
-void Account::withdraw(double amount) {
-    if (balance >= amount) {
-        balance -= amount;
-        transactions.emplace_back(transactions.size() + 1, accountNumber, "Withdrawal", amount, getCurrentDate());
-    } else {
-        std::cout << "Insufficient balance" << std::endl;
+bool Account::withdraw(double amount) {
+    Transaction transaction(transactions.size() + 1, accountNumber, "Withdrawal", amount, getCurrentDate());
+    if (transaction.executeTransaction(this)) {
+        transactions.push_back(transaction);
+        return true;
     }
+    return false;
 }
 
-void Account::transfer(double amount, Account &toAccount) {
-    if (balance >= amount) {
-        balance -= amount;
-        toAccount.deposit(amount);
-        transactions.emplace_back(transactions.size() + 1, accountNumber, "Transfer", amount, getCurrentDate());
-    } else {
-        std::cout << "Insufficient balance" << std::endl;
+bool Account::transfer(double amount, Account &toAccount) {
+    Transaction transaction(transactions.size() + 1, accountNumber, "Transfer", amount, getCurrentDate());
+    if (transaction.executeTransaction(this, &toAccount)) {
+        transactions.push_back(transaction);
+        return true;
     }
+    return false;
 }
 
 void Account::viewTransactions() const {
